@@ -1,0 +1,310 @@
+[
+    {
+        "id": "9e0ac452.4aab48",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "1df1ff3a.1651e1",
+        "type": "camerapi-takephoto",
+        "z": "9e0ac452.4aab48",
+        "filemode": "0",
+        "filename": "temp.jpg",
+        "filedefpath": "1",
+        "filepath": "",
+        "fileformat": "jpeg",
+        "resolution": "1",
+        "rotation": "0",
+        "fliph": "0",
+        "flipv": "0",
+        "brightness": "50",
+        "contrast": "0",
+        "sharpness": "0",
+        "quality": "80",
+        "imageeffect": "none",
+        "exposuremode": "auto",
+        "iso": "0",
+        "agcwait": "1.0",
+        "led": "0",
+        "awb": "auto",
+        "name": "",
+        "x": 440,
+        "y": 360,
+        "wires": [
+            [
+                "df47e9be.bb87d8"
+            ]
+        ]
+    },
+    {
+        "id": "4bf36c69.101f94",
+        "type": "visual-recognition-v3",
+        "z": "9e0ac452.4aab48",
+        "name": "",
+        "vr-service-endpoint": "https://api.us-south.visual-recognition.watson.cloud.ibm.com/instances/30606781-8a91-4da3-8e95-52a9a3667035",
+        "image-feature": "classifyImage",
+        "lang": "en",
+        "x": 650,
+        "y": 480,
+        "wires": [
+            [
+                "738d556e.e4341c",
+                "fb80af15.31b97"
+            ]
+        ]
+    },
+    {
+        "id": "738d556e.e4341c",
+        "type": "debug",
+        "z": "9e0ac452.4aab48",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "result",
+        "targetType": "msg",
+        "x": 890,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "df47e9be.bb87d8",
+        "type": "change",
+        "z": "9e0ac452.4aab48",
+        "name": "set-custom-classifier",
+        "rules": [
+            {
+                "t": "set",
+                "p": "params[\"classifier_ids\"]",
+                "pt": "msg",
+                "to": "mask_model_269939421",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 560,
+        "y": 420,
+        "wires": [
+            [
+                "4bf36c69.101f94"
+            ]
+        ]
+    },
+    {
+        "id": "fb80af15.31b97",
+        "type": "switch",
+        "z": "9e0ac452.4aab48",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 730,
+        "y": 560,
+        "wires": [
+            [
+                "2686eb05.032e14"
+            ]
+        ]
+    },
+    {
+        "id": "3b18e40.2b2101c",
+        "type": "http in",
+        "z": "9e0ac452.4aab48",
+        "name": "receive-qr-code",
+        "url": "/receiveqr",
+        "method": "get",
+        "upload": false,
+        "swaggerDoc": "",
+        "x": 100,
+        "y": 40,
+        "wires": [
+            [
+                "152bc82e.5ffeb8",
+                "731e3368.aba85c",
+                "f01702f4.c722d"
+            ]
+        ]
+    },
+    {
+        "id": "152bc82e.5ffeb8",
+        "type": "debug",
+        "z": "9e0ac452.4aab48",
+        "name": "read-qr-code",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 490,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "731e3368.aba85c",
+        "type": "http response",
+        "z": "9e0ac452.4aab48",
+        "name": "return-ok",
+        "statusCode": "200",
+        "headers": {},
+        "x": 480,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "f01702f4.c722d",
+        "type": "http request",
+        "z": "9e0ac452.4aab48",
+        "name": "verify-qr-code",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": true,
+        "url": "https://service.us.apiconnect.ibmcloud.com/gws/apigateway/api/baabc0064e11b6bb796f91a7596be1e9edc4ba4a5558763eb62f05c0fa8dd238/verify_code/verify_code",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "6cc56104.5a15d",
+                "ee755f3c.dfbdd"
+            ]
+        ]
+    },
+    {
+        "id": "6cc56104.5a15d",
+        "type": "debug",
+        "z": "9e0ac452.4aab48",
+        "name": "verify-qr-code",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 480,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "ee755f3c.dfbdd",
+        "type": "switch",
+        "z": "9e0ac452.4aab48",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 250,
+        "y": 220,
+        "wires": [
+            [
+                "49bb82b3.b998dc",
+                "da62c033.59d23"
+            ]
+        ]
+    },
+    {
+        "id": "49bb82b3.b998dc",
+        "type": "PlayAudioFast",
+        "z": "9e0ac452.4aab48",
+        "name": "error-qr-code",
+        "playerOptions": "",
+        "audioURI": "/home/kdeif/c4c/c4c-covidapp/iot/soundserror-qr.wav",
+        "options": "",
+        "x": 490,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "da62c033.59d23",
+        "type": "PlayAudioFast",
+        "z": "9e0ac452.4aab48",
+        "name": "valid-qr-code",
+        "playerOptions": "",
+        "audioURI": "/home/kdeif/c4c/c4c-covidapp/iot/sounds/valid-qr.wav",
+        "options": "",
+        "x": 340,
+        "y": 300,
+        "wires": [
+            [
+                "1df1ff3a.1651e1"
+            ]
+        ]
+    },
+    {
+        "id": "a7c97c5a.96057",
+        "type": "PlayAudioFast",
+        "z": "9e0ac452.4aab48",
+        "name": "error-mask",
+        "playerOptions": "",
+        "audioURI": "/home/kdeif/c4c/c4c-covidapp/iot/sounds/error-no-mask.wav",
+        "options": "",
+        "x": 410,
+        "y": 580,
+        "wires": [
+            [
+                "fb80af15.31b97"
+            ]
+        ]
+    },
+    {
+        "id": "6eb42eff.86452",
+        "type": "complete",
+        "z": "9e0ac452.4aab48",
+        "name": "",
+        "scope": [
+            "1df1ff3a.1651e1"
+        ],
+        "uncaught": false,
+        "x": 110,
+        "y": 580,
+        "wires": [
+            [
+                "a7c97c5a.96057"
+            ]
+        ]
+    },
+    {
+        "id": "2686eb05.032e14",
+        "type": "PlayAudioFast",
+        "z": "9e0ac452.4aab48",
+        "name": "valid-mask",
+        "playerOptions": "",
+        "audioURI": "/home/kdeif/c4c/c4c-covidapp/iot/sounds/valid-mask.wav",
+        "options": "",
+        "x": 890,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    }
+]

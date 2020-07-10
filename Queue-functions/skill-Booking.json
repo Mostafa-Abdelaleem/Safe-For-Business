@@ -1,0 +1,631 @@
+{
+  "intents": [
+    {
+      "intent": "booking",
+      "examples": [
+        {
+          "text": "sunday 5 AM"
+        },
+        {
+          "text": "shop on wednesday at 8pm"
+        },
+        {
+          "text": "I wanna book thursday at 1 Pm"
+        },
+        {
+          "text": "book to visit for tomorrow at 5pm",
+          "mentions": [
+            {
+              "entity": "scheduale",
+              "location": [
+                0,
+                4
+              ]
+            }
+          ]
+        },
+        {
+          "text": "visit store today at 3"
+        },
+        {
+          "text": "schedule at 9pm"
+        },
+        {
+          "text": "go to store may 7 at 4pm",
+          "mentions": [
+            {
+              "entity": "scheduale",
+              "location": [
+                0,
+                2
+              ]
+            }
+          ]
+        }
+      ],
+      "description": ""
+    },
+    {
+      "intent": "Welcome",
+      "examples": [],
+      "description": ""
+    },
+    {
+      "intent": "query",
+      "examples": [
+        {
+          "text": "i want to query"
+        }
+      ]
+    }
+  ],
+  "entities": [
+    {
+      "entity": "scheduale",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "go",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "shop",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "book",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "scheduale",
+          "synonyms": [
+            "book"
+          ]
+        },
+        {
+          "type": "synonyms",
+          "value": "visit",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "schedule",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "sys-time",
+      "values": []
+    },
+    {
+      "entity": "slots",
+      "values": [
+        {
+          "type": "synonyms",
+          "value": "4",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "5",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "6",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "7",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "8",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "9",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "9 AM",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "10",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "11",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "12",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "2",
+          "synonyms": []
+        },
+        {
+          "type": "synonyms",
+          "value": "3",
+          "synonyms": []
+        }
+      ],
+      "fuzzy_match": true
+    },
+    {
+      "entity": "sys-date",
+      "values": []
+    }
+  ],
+  "metadata": {
+    "api_version": {
+      "major_version": "v2",
+      "minor_version": "2018-11-08"
+    }
+  },
+  "webhooks": [
+    {
+      "url": "https://us-south.functions.cloud.ibm.com/api/v1/namespaces/c4cteam_queue/actions/book-query?blocking=true",
+      "name": "main_webhook",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Basic MTM0MDYyOTMtODM3YS00ZDUxLWE0NmMtNzg2MmU1YTZkMjE5OlZ4VWl2ZkxMWkhRM2M2dXh5NUVCV2NsdTdUNEl1ZnFRUENDOFlicW5vOHIxa1BpNW5lSzhWVVRXVklSQlBrQXQ="
+        }
+      ]
+    }
+  ],
+  "dialog_nodes": [
+    {
+      "type": "slot",
+      "output": {},
+      "parent": "node_10_1589928120223",
+      "variable": "time",
+      "dialog_node": "slot_9_1589928157830",
+      "previous_sibling": "node_8_1589928488647"
+    },
+    {
+      "type": "slot",
+      "parent": "node_10_1589928120223",
+      "variable": "date",
+      "dialog_node": "slot_9_1589928297472",
+      "previous_sibling": "slot_9_1589928157830"
+    },
+    {
+      "type": "standard",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Please choose a valid time"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_10_1589928120223",
+      "conditions": "true",
+      "dialog_node": "node_8_1589928488647",
+      "previous_sibling": "node_9_1589928321855"
+    },
+    {
+      "type": "standard",
+      "title": "book with new time",
+      "parent": "node_10_1589928120223",
+      "actions": [
+        {
+          "name": "main_webhook",
+          "type": "webhook",
+          "parameters": {
+            "day": "$date",
+            "hour": "$time",
+            "oper": "book"
+          },
+          "result_variable": "webhook_result_2"
+        }
+      ],
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "next_step": {
+        "behavior": "skip_user_input"
+      },
+      "conditions": "$time",
+      "dialog_node": "node_9_1589928321855"
+    },
+    {
+      "type": "event_handler",
+      "output": {
+        "generic": [
+          {
+            "title": "",
+            "options": [
+              {
+                "label": "<? $webhook_result_1.response.result.slots[0] ?>",
+                "value": {
+                  "input": {
+                    "text": "<? $webhook_result_1.response.result.slots[0] ?>"
+                  }
+                }
+              }
+            ],
+            "response_type": "option"
+          }
+        ]
+      },
+      "parent": "slot_9_1589928157830",
+      "event_name": "focus",
+      "dialog_node": "handler_1_1589928157860",
+      "previous_sibling": "handler_8_1589928157860"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_9_1589928157830",
+      "context": {
+        "time": "@sys-time"
+      },
+      "conditions": "@sys-time",
+      "event_name": "input",
+      "dialog_node": "handler_8_1589928157860"
+    },
+    {
+      "type": "frame",
+      "title": "collectdata",
+      "parent": "node_8_1589924016254",
+      "next_step": {
+        "behavior": "skip_user_input"
+      },
+      "conditions": "$webhook_result_1",
+      "dialog_node": "node_10_1589928120223"
+    },
+    {
+      "type": "response_condition",
+      "parent": "node_9_1589928321855",
+      "conditions": "anything_else",
+      "dialog_node": "response_8_1589928363726",
+      "previous_sibling": "response_2_1589928361776"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "$webhook_result_2.response.result.res at $time with code: $webhook_result_2.response.result.code   "
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_9_1589928321855",
+      "conditions": "$webhook_result_2",
+      "dialog_node": "response_2_1589928361776",
+      "previous_sibling": "node_8_1589928811284"
+    },
+    {
+      "type": "standard",
+      "title": "clear context var",
+      "parent": "node_9_1589928321855",
+      "context": {
+        "date": null,
+        "time": null
+      },
+      "conditions": "true",
+      "dialog_node": "node_8_1589928811284"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_9_1589928297472",
+      "event_name": "focus",
+      "dialog_node": "handler_5_1589928297479",
+      "previous_sibling": "handler_1_1589928297478"
+    },
+    {
+      "type": "event_handler",
+      "output": {},
+      "parent": "slot_9_1589928297472",
+      "context": {
+        "date": "@sys-date"
+      },
+      "conditions": "@sys-date",
+      "event_name": "input",
+      "dialog_node": "handler_1_1589928297478"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Please make sure to write your request in the following format.\" I wanna book for tomorrow at 1 PM\".\"Wednesday at 9 AM\"\"Thursday at 14\"."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1588243009780",
+      "conditions": "anything_else",
+      "dialog_node": "response_10_1591906234634",
+      "previous_sibling": "response_10_1588333724542"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "sorry this time is very crowded, plz try another time"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1588243009780",
+      "conditions": "$response.response.result.res == \"sorry this time is very crowded, plz try another time\"",
+      "dialog_node": "response_5_1593031897535",
+      "previous_sibling": "response_1_1593030450699"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Your timeslot is : @sys-date @sys-time.literal your code is: $response.response.result.code"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1588243009780",
+      "conditions": "$response.response.result.code",
+      "dialog_node": "response_10_1588333724542",
+      "previous_sibling": "response_5_1593031897535"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Please select an hour to book."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1588243009780",
+      "conditions": "@sys-time == null",
+      "dialog_node": "response_7_1591902417000",
+      "previous_sibling": "response_1_1591865391121"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "$response.response.result.res"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1588243009780",
+      "conditions": "$response.response.result.res == \"out of working hours plz choose a time between 9am and 10pm\"",
+      "dialog_node": "response_1_1593030450699",
+      "previous_sibling": "response_7_1591902417000"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Please choose a day to book for."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1588243009780",
+      "conditions": "@sys-date == null",
+      "dialog_node": "response_1_1591865391121",
+      "previous_sibling": "node_6_1589921113256"
+    },
+    {
+      "type": "response_condition",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "You must choose a date and time. Refer to the following formats: \" I wanna book for tomorrow at 1 PM\".\"Wednesday at 9 AM\"\"Thursday at 14\"."
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "parent": "node_3_1588243009780",
+      "conditions": "@sys-date == null && @sys-time == null",
+      "dialog_node": "response_3_1591902924991",
+      "previous_sibling": "response_10_1591906234634"
+    },
+    {
+      "type": "standard",
+      "title": "clear systime",
+      "parent": "node_3_1588243009780",
+      "context": {
+        "response": null
+      },
+      "conditions": "true",
+      "dialog_node": "node_6_1589921113256"
+    },
+    {
+      "type": "standard",
+      "title": "queryday",
+      "actions": [
+        {
+          "name": "main_webhook",
+          "type": "webhook",
+          "parameters": {
+            "day": "@sys-date",
+            "oper": "query"
+          },
+          "result_variable": "webhook_result_1"
+        }
+      ],
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "next_step": {
+        "behavior": "skip_user_input"
+      },
+      "conditions": "#query",
+      "dialog_node": "node_8_1589924016254",
+      "previous_sibling": "Welcome"
+    },
+    {
+      "type": "standard",
+      "title": "book",
+      "actions": [
+        {
+          "name": "main_webhook",
+          "type": "webhook",
+          "parameters": {
+            "day": "@sys-date",
+            "hour": "@sys-time",
+            "oper": "book"
+          },
+          "result_variable": "response"
+        }
+      ],
+      "metadata": {
+        "_customization": {
+          "mcr": true
+        }
+      },
+      "next_step": {
+        "behavior": "jump_to",
+        "selector": "condition",
+        "dialog_node": "node_6_1589921113256"
+      },
+      "conditions": "#booking",
+      "dialog_node": "node_3_1588243009780",
+      "previous_sibling": "node_8_1589924016254"
+    },
+    {
+      "type": "standard",
+      "title": "Anything else",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hello, what day and time would you like to book ?\n"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "anything_else",
+      "dialog_node": "Anything else",
+      "previous_sibling": "node_3_1588243009780",
+      "disambiguation_opt_out": true
+    },
+    {
+      "type": "standard",
+      "title": "Welcome",
+      "output": {
+        "generic": [
+          {
+            "values": [
+              {
+                "text": "Hello, what day and time would you like to book ?"
+              }
+            ],
+            "response_type": "text",
+            "selection_policy": "sequential"
+          }
+        ]
+      },
+      "conditions": "welcome",
+      "dialog_node": "Welcome"
+    }
+  ],
+  "counterexamples": [],
+  "system_settings": {
+    "off_topic": {
+      "enabled": true
+    },
+    "disambiguation": {
+      "prompt": "Did you mean:",
+      "enabled": true,
+      "randomize": true,
+      "max_suggestions": 5,
+      "suggestion_text_policy": "title",
+      "none_of_the_above_prompt": "None of the above"
+    },
+    "system_entities": {
+      "enabled": true
+    },
+    "human_agent_assist": {
+      "prompt": "Did you mean:"
+    },
+    "spelling_auto_correct": true
+  },
+  "learning_opt_out": false,
+  "name": "Booking",
+  "language": "en",
+  "description": "Booking at stores"
+}
